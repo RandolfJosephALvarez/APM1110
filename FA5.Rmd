@@ -1,0 +1,126 @@
+---
+title: "FA5"
+output: pdf_document
+date: "2024-03-07"
+---
+
+6.
+
+Percentage of messages per server and errors:
+
+```{r}
+server1_m <- 0.40
+server2_m <- 0.25
+server3_m <- 0.35
+
+server1_e <- 0.01
+server2_e <- 0.02
+server3_e <- 0.015
+
+```
+
+(A). Probability of receiving an email containing an error:
+
+```{r}
+errors_p <- (server1_m*server1_e)+(server2_m*server2_e)+(server3_m*server3_e)
+errors_p
+```
+
+(B). Probability of receiving an email without an error:
+
+```{r}
+no_error <- 1-errors_p
+no_error
+```
+
+(C). If a message arrives with an error, what is the probability that it was sent through server1?
+  Use the Baye's Theorem
+
+```{r}
+bayestheorem <- function(pA,pB,pBA){
+    pAB <- (pA*pBA)/pB
+  return(pAB)
+
+}
+
+bayestheorem(server1_m,no_error,server1_e)
+```
+.....................................................................................................................
+
+
+
+
+9.
+Variables:
+
+```{r}
+no_buy <- 0.20
+will_buy <- 0.70
+undecided <- 0.10
+
+no_buy_hardaware <- 0.10
+will_buy_hardaware <- 0.40
+undecided_hardaware <- 0.20
+
+```
+(A). calculating P(Gbar)
+
+```{r}
+
+p_upgrade <- (no_buy*no_buy_hardaware)+(will_buy*will_buy_hardaware)+(undecided*undecided_hardaware)
+no_upgrade <- 1-p_upgrade
+no_upgrade
+```
+
+(B). Posterior probability P(B|G) means, determining the probability of a manager having the intention of buying a new package given that they also intend to upgrade their hardware. This can be calculated using the Baye's theorem which has already been defined in the previous problems.
+
+```{r}
+bayestheorem(will_buy,p_upgrade,will_buy_hardaware*will_buy)
+
+```
+
+(C). Tree diagram:
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("diagram.png", error=FALSE)
+
+```
+
+13.
+
+(A). Probability that the spyware infects the system:
+```{r}
+net <- .70
+mail <- .30
+
+net_detect <- .60
+mail_detect <- .80
+
+net_infect <- 1-(net*net_detect)
+net_infect
+
+mail_infect <- 1-(mail*mail_detect)
+mail_infect
+
+infected <- (net*net_infect)+(mail*mail_infect)
+infected
+
+```
+
+Probability that the spyware infects t he system is 63.4%
+
+(B). Probability that spyware came from the internet if it is detected:
+
+
+```{r}
+from_net <- (net*net_detect)
+from_net
+
+```
+
+
+
+
+
+
+
