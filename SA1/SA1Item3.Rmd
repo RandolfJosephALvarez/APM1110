@@ -1,0 +1,68 @@
+---
+title: "SA1Item3"
+output: pdf_document
+date: "2024-03-19"
+---
+
+```{r}
+# Set the number of simulations
+n_simulations <- 10000
+
+# Probability that any site contains the key phrase (test data: 60% chance)
+p <- 0.6
+
+# Function to simulate searches until success
+simulate_searches <- function(p, n_simulations) {
+  searches <- vector("numeric", length = n_simulations)
+  for (i in 1:n_simulations) {
+    success <- FALSE
+    n_searches <- 0
+    while (!success) {
+      n_searches <- n_searches + 1
+      if (runif(1) <= p) {
+        success <- TRUE
+      }
+    }
+    searches[i] <- n_searches
+  }
+  return(searches)
+}
+
+# Simulate searches
+search_results <- simulate_searches(p, n_simulations)
+
+# Plot the simulated pdf
+hist(search_results, breaks = seq(0.5, max(search_results) + 0.5, by = 1),
+     freq = FALSE, col = "skyblue", xlab = "Number of Searches",
+     main = "Simulated PDF of Searches until Success")
+lines(density(search_results), col = "red", lwd = 2)
+
+# Calculate mean and variance of the simulated distribution
+mean_searches <- mean(search_results)
+var_searches <- var(search_results)
+cat("Mean of searches until success:", mean_searches, "\n")
+cat("Variance of searches until success:", var_searches, "\n")
+
+# Obtain the simulated conditional distribution when 3 searches have been carried out without success
+conditional_searches <- search_results[search_results > 3] - 3
+
+# Calculate mean and variance of the conditional distribution
+mean_conditional <- mean(conditional_searches)
+var_conditional <- var(conditional_searches)
+cat("\nMean of conditional searches (X > 3):", mean_conditional, "\n")
+cat("Variance of conditional searches (X > 3):", var_conditional, "\n")
+
+# Markov memoryless property: P(X=4|X>3), P(X=1), P(X=5|X>3), P(X=2)
+prob_x4_given_xgt3 <- sum(search_results == 4 & search_results > 3) / sum(search_results > 3)
+prob_x1 <- sum(search_results == 1) / n_simulations
+prob_x5_given_xgt3 <- sum(search_results == 5 & search_results > 3) / sum(search_results > 3)
+prob_x2 <- sum(search_results == 2) / n_simulations
+
+cat("\nMarkov memoryless property estimates:\n")
+cat("P(X=4|X>3):", prob_x4_given_xgt3, "\n")
+cat("P(X=1):", prob_x1, "\n")
+cat("P(X=5|X>3):", prob_x5_given_xgt3, "\n")
+cat("P(X=2):", prob_x2, "\n")
+
+
+```
